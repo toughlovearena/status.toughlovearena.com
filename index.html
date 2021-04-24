@@ -141,6 +141,7 @@
     <header>
       <img id="logo" src="static/logo.png" alt="logo" />
       <div>Tough Love Arena Status Page</div>
+      <div>v<span id="version">???</span></div>
     </header>
 
     <section id="data">
@@ -240,6 +241,17 @@
         document.getElementById(`status-${tag}`).innerHTML = down();
       }
       document.getElementById(`ms-${tag}`).innerText = (new Date().getTime() - start);
+    }
+
+    async function version() {
+      try {
+        const data = await poll('https://toughlovearena.com/version.json');
+        const version = data.v;
+        document.getElementById('version').innerText = version;
+      } catch (err) {
+        console.log(err);
+        document.getElementById('version').innerText = '???';
+      }
     }
 
     async function playerCount() {
@@ -381,6 +393,7 @@
 
     async function pollAll() {
       await Promise.all([
+        version(),
         playerCount(),
         queueTimes(),
         checkNoCors('home', 'https://toughlovearena.com'),
