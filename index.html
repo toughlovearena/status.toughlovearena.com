@@ -1,0 +1,398 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TLA Status</title>
+
+  <link rel="shortcut icon" href="static/favicon.png">
+  <meta property="og:url" content="https://status.toughlovearena.com">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TLA Status">
+  <meta property="og:description" content="Status page for toughlovearena.com">
+  <meta property="og:image" content="https://status.toughlovearena.com/static/favicon.png">
+
+  <link rel="stylesheet" href="static/Chart.2.9.4.css" />
+  <script src="static/Chart.2.9.4.js"></script>
+
+  <style>
+    @font-face {
+      font-family: 'Fightura';
+      src: url('static/font.ttf?DidactGothic') format('truetype');
+    }
+
+    html {
+      font-size: 20px;
+
+      background-color: rgb(30, 30, 30);
+      color: white;
+    }
+
+    body {
+      font-family: 'Fightura';
+
+      margin: 0;
+      width: 100%;
+      min-height: 100vh;
+
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    a {
+      color: #91D2FA
+    }
+
+    #container {
+      padding: 2rem 1rem;
+      box-sizing: border-box;
+      max-width: 800px;
+    }
+
+    /* shared */
+    .column {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .large {
+      font-size: 1.5em;
+      margin: 1em 0;
+    }
+
+    /* header */
+    header {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid white;
+    }
+
+    #logo {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+    }
+
+    /* center */
+    #data {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    table {
+      font-size: 1rem;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: center;
+      border: 1px solid grey;
+      padding: 0.5em 1em;
+      background-color: rgb(60, 60, 60);
+    }
+
+    th {
+      background-color: inherit;
+    }
+
+    .up {
+      color: lightgreen;
+    }
+
+    .down {
+      color: salmon;
+    }
+
+    /* footer */
+    footer {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid white;
+    }
+
+    @media (min-width: 1600px) {
+      #container {
+        max-width: 1600px;
+      }
+
+      #data {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      #data .column {
+        margin: 1rem;
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container" class="column">
+    <header>
+      <img id="logo" src="static/logo.png" alt="logo" />
+      <div>Tough Love Arena Status Page</div>
+    </header>
+
+    <section id="data">
+      <div class="column">
+        <div class="large">
+          Active Players: <span id="count">???</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Status</th>
+              <th>ms</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>toughlovearena.com</td>
+              <td>
+                <span id="status-home">???</span>
+              </td>
+              <td>
+                <span id="ms-home">???</span>
+              </td>
+            </tr>
+            <tr>
+              <td>Matchmaker API</td>
+              <td>
+                <span id="status-match">???</span>
+              </td>
+              <td>
+                <span id="ms-match">???</span>
+              </td>
+            </tr>
+            <tr>
+              <td>Accounts API</td>
+              <td>
+                <span id="status-api">???</span>
+              </td>
+              <td>
+                <span id="ms-api">???</span>
+              </td>
+            </tr>
+            <tr>
+              <td>P2P Broker</td>
+              <td>
+                <span id="status-ice">???</span>
+              </td>
+              <td>
+                <span id="ms-ice">???</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column">
+        <div class="large">
+          Average Queue Time: <span id="queue">???</span> seconds
+        </div>
+        <canvas id="myChart"></canvas>
+      </div>
+    </section>
+
+    <footer>
+      Updates every 30 seconds
+      <br />
+      Last updated @ <span id="updated">???</span>
+      <br />
+      If anything is down, please email <a href="mailto:toughlovearena@gmail.com">toughlovearena@gmail.com</a>
+    </footer>
+  </div>
+  <script>
+    async function poll(url) {
+      const resp = await fetch(url + '?v=' + new Date().getTime());
+      const data = await resp.json();
+      return data;
+    }
+    async function nocors(url) {
+      const resp = await fetch(url + '?v=' + new Date().getTime(), {
+        mode: 'no-cors',
+      });
+      return resp.ok;
+    }
+    function up() {
+      return `<span class="up">OK</span>`;
+    }
+    function down() {
+      return `<span class="down">DOWN</span>`;
+    }
+    async function checkNoCors(tag, url) {
+      const start = new Date().getTime();
+      try {
+        await nocors(url);
+        document.getElementById(`status-${tag}`).innerHTML = up();
+      } catch (err) {
+        console.log(err);
+        document.getElementById(`status-${tag}`).innerHTML = down();
+      }
+      document.getElementById(`ms-${tag}`).innerText = (new Date().getTime() - start);
+    }
+
+    async function playerCount() {
+      try {
+        const data = await poll('https://match.toughlovearena.com/presence');
+        const sum = Object.values(data).reduce((c, sum) => sum + c, 0);
+        document.getElementById('count').innerText = sum;
+      } catch (err) {
+        console.log(err);
+        document.getElementById('count').innerText = '???';
+      }
+    }
+
+    const canvas = document.getElementById('myChart');
+    const ctx = canvas.getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Casual Queue Time',
+          data: [],
+          // backgroundColor: [
+          //   'rgba(255, 99, 132, 0.2)',
+          //   'rgba(54, 162, 235, 0.2)',
+          //   'rgba(255, 206, 86, 0.2)',
+          //   'rgba(75, 192, 192, 0.2)',
+          //   'rgba(153, 102, 255, 0.2)',
+          //   'rgba(255, 159, 64, 0.2)'
+          // ],
+          // borderColor: [
+          //   'rgba(255, 99, 132, 1)',
+          //   'rgba(54, 162, 235, 1)',
+          //   'rgba(255, 206, 86, 1)',
+          //   'rgba(75, 192, 192, 1)',
+          //   'rgba(153, 102, 255, 1)',
+          //   'rgba(255, 159, 64, 1)'
+          // ],
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        legend: {
+          display: false,
+        },
+        responsive: true,
+        // maintainAspectRatio: true,
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'seconds waiting for match',
+              fontColor: 'white',
+            },
+            ticks: {
+              fontColor: 'white',
+            },
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'matches',
+              fontColor: 'white',
+            },
+            ticks: {
+              beginAtZero: true,
+              fontColor: 'white',
+            },
+          }],
+        },
+      }
+    });
+
+    function chunk(arr, chunkSize) {
+      const results = [];
+      let start = 0;
+      while (start < arr.length) {
+        results.push(arr.slice(start, start + chunkSize));
+        start += chunkSize;
+      }
+      return results;
+    }
+    function convertQueueTimesToData(...qt) {
+      const lookup = {};
+      qt.forEach(queueTimes => {
+        const latestDate = Object.keys(queueTimes).sort().pop();
+        const queueDate = queueTimes[latestDate];
+        for (const key in queueDate) {
+          const seconds = parseFloat(key.split('s')[0]);
+          const count = queueDate[key];
+          lookup[seconds.toString()] = (lookup[seconds.toString()] || 0) + count;
+        }
+      });
+      const dataSet = [];
+      let sum = 0;
+      let sumCount = 0;
+      for (const key in lookup) {
+        const seconds = parseFloat(key);
+        const count = lookup[key];
+        dataSet.push({ seconds, count, });
+        sum += seconds * count;
+        sumCount += count;
+      }
+      const average = sum / sumCount;
+
+      const lowest = 0;
+      const highest = Math.max(...dataSet.map(d => d.seconds));
+      const allLabels = [...Array(highest + 1).keys()];
+      const allValues = allLabels.map(i => lookup[i.toString()] || 0);
+      const labels = chunk(allLabels, 5).map(c => `${c[0]} - ${c.concat().pop()}`);
+      const values = chunk(allValues, 5).map(c => c.reduce((sum, curr) => sum + curr, 0));
+      return { labels, values, average };
+    }
+    async function queueTimes() {
+      try {
+        const data = await poll('https://match.toughlovearena.com/details');
+        const servers = data;
+        const prod = servers.filter(s => s.label === 'prod')[0];
+        const graphData = convertQueueTimesToData(prod.casual.queueTimes, prod.ranked.queueTimes);
+        while (myChart.data.labels.length) {
+          myChart.data.labels.pop();
+        }
+        myChart.data.datasets.forEach(ds => {
+          while (ds.data.length) {
+            ds.data.pop();
+          }
+        });
+        graphData.labels.forEach(lab => myChart.data.labels.push(lab));
+        graphData.values.forEach(val => myChart.data.datasets.forEach(ds => ds.data.push(val)));
+        myChart.update();
+        document.getElementById('queue').innerText = Math.round(graphData.average);
+      } catch (err) {
+        console.log(err);
+        document.getElementById('queue').innerText = '???';
+      }
+    }
+
+    async function pollAll() {
+      await Promise.all([
+        playerCount(),
+        queueTimes(),
+        checkNoCors('home', 'https://toughlovearena.com'),
+        checkNoCors('match', 'https://match.toughlovearena.com'),
+        checkNoCors('api', 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/'),
+        checkNoCors('ice', 'https://stun.toughlovearena.com/health'),
+      ]);
+      document.getElementById('updated').innerText = new Date().toLocaleTimeString();
+    }
+
+    // init
+    pollAll();
+    setInterval(() => pollAll(), 30 * 1000);
+  </script>
+</body>
