@@ -120,7 +120,7 @@
 
     @media (min-width: 800px) {
       #container {
-        max-width: 1600px;
+        max-width: 1200px;
       }
 
       #data {
@@ -241,9 +241,15 @@
       </div>
       <div class="column">
         <div class="large">
-          Average Queue Time: <span id="queue">???</span> seconds
+          Ranked Queue Time: <span id="queue-ranked">???</span> seconds
         </div>
-        <canvas id="myChart"></canvas>
+        <canvas id="chart-ranked"></canvas>
+      </div>
+      <div class="column">
+        <div class="large">
+          Casual Queue Time: <span id="queue-casual">???</span> seconds
+        </div>
+        <canvas id="chart-casual"></canvas>
       </div>
     </section>
 
@@ -313,67 +319,56 @@
       }
     }
 
-    const canvas = document.getElementById('myChart');
-    const ctx = canvas.getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: 'Casual Queue Time',
-          data: [],
-          // backgroundColor: [
-          //   'rgba(255, 99, 132, 0.2)',
-          //   'rgba(54, 162, 235, 0.2)',
-          //   'rgba(255, 206, 86, 0.2)',
-          //   'rgba(75, 192, 192, 0.2)',
-          //   'rgba(153, 102, 255, 0.2)',
-          //   'rgba(255, 159, 64, 0.2)'
-          // ],
-          // borderColor: [
-          //   'rgba(255, 99, 132, 1)',
-          //   'rgba(54, 162, 235, 1)',
-          //   'rgba(255, 206, 86, 1)',
-          //   'rgba(75, 192, 192, 1)',
-          //   'rgba(153, 102, 255, 1)',
-          //   'rgba(255, 159, 64, 1)'
-          // ],
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        legend: {
-          display: false,
+    function createQueueChart(id, label, colorRGB) {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: label,
+            data: [],
+            backgroundColor: `rgba(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b}, 0.2)`,
+            borderColor: `rgba(${colorRGB.r}, ${colorRGB.g}, ${colorRGB.b}, 1)`,
+            borderWidth: 1
+          }]
         },
-        responsive: true,
-        // maintainAspectRatio: true,
-        scales: {
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'seconds waiting for match',
-              fontColor: 'white',
-            },
-            ticks: {
-              fontColor: 'white',
-            },
-          }],
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'matches',
-              fontColor: 'white',
-            },
-            ticks: {
-              beginAtZero: true,
-              fontColor: 'white',
-            },
-          }],
-        },
-      }
-    });
+        options: {
+          legend: {
+            display: false,
+          },
+          responsive: true,
+          // maintainAspectRatio: true,
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'seconds waiting for match',
+                fontColor: 'white',
+              },
+              ticks: {
+                fontColor: 'white',
+              },
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'matches',
+                fontColor: 'white',
+              },
+              ticks: {
+                beginAtZero: true,
+                fontColor: 'white',
+              },
+            }],
+          },
+        }
+      });
+      return myChart;
+    }
+    const rankedChart = createQueueChart('chart-ranked', 'Ranked Queue Time', { r: 162, g: 100, b: 235, });
+    const casualChart = createQueueChart('chart-casual', 'Casual Queue Time', { r: 54, g: 162, b: 235, });
 
     function chunk(arr, chunkSize) {
       const results = [];
@@ -384,17 +379,15 @@
       }
       return results;
     }
-    function convertQueueTimesToData(...qt) {
+    function convertQueueTimesToData(queueTimes) {
       const lookup = {};
-      qt.forEach(queueTimes => {
-        const latestDate = Object.keys(queueTimes).sort().pop();
-        const queueDate = queueTimes[latestDate];
-        for (const key in queueDate) {
-          const seconds = parseFloat(key.split('s')[0]);
-          const count = queueDate[key];
-          lookup[seconds.toString()] = (lookup[seconds.toString()] || 0) + count;
-        }
-      });
+      const latestDate = Object.keys(queueTimes).sort().pop();
+      const queueDate = queueTimes[latestDate];
+      for (const key in queueDate) {
+        const seconds = parseFloat(key.split('s')[0]);
+        const count = queueDate[key];
+        lookup[seconds.toString()] = (lookup[seconds.toString()] || 0) + count;
+      }
       const dataSet = [];
       let sum = 0;
       let sumCount = 0;
@@ -420,22 +413,36 @@
         const data = await poll('https://match.toughlovearena.com/details');
         const servers = data;
         const prod = servers.filter(s => s.label === 'prod')[0];
-        const graphData = convertQueueTimesToData(prod.casual.queueTimes, prod.ranked.queueTimes);
-        while (myChart.data.labels.length) {
-          myChart.data.labels.pop();
-        }
-        myChart.data.datasets.forEach(ds => {
-          while (ds.data.length) {
-            ds.data.pop();
+        const queues = [{
+          queueTimes: prod.ranked.queueTimes,
+          avgId: 'queue-ranked',
+          chart: rankedChart,
+        }, {
+          queueTimes: prod.casual.queueTimes,
+          avgId: 'queue-casual',
+          chart: casualChart,
+        }];
+        queues.forEach(q => {
+          const graphData = convertQueueTimesToData(q.queueTimes);
+          while (q.chart.data.labels.length) {
+            q.chart.data.labels.pop();
           }
+          q.chart.data.datasets.forEach(ds => {
+            while (ds.data.length) {
+              ds.data.pop();
+            }
+          });
+          graphData.labels.forEach(lab => q.chart.data.labels.push(lab));
+          graphData.values.forEach(val => q.chart.data.datasets.forEach(ds => ds.data.push(val)));
+          q.chart.update();
+          document.getElementById(q.avgId).innerText = Math.round(graphData.average);
         });
-        graphData.labels.forEach(lab => myChart.data.labels.push(lab));
-        graphData.values.forEach(val => myChart.data.datasets.forEach(ds => ds.data.push(val)));
-        myChart.update();
-        document.getElementById('queue').innerText = Math.round(graphData.average);
       } catch (err) {
         console.log(err);
-        document.getElementById('queue').innerText = '???';
+        queues.forEach(q => {
+          document.getElementById('queue-ranked').innerText = '???';
+          document.getElementById('queue-casual').innerText = '???';
+        });
       }
     }
 
