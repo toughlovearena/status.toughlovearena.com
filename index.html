@@ -62,6 +62,7 @@
     .large {
       font-size: 1.5em;
       margin: 1em 0;
+      margin-bottom: 0.5em;
     }
 
     /* header */
@@ -117,7 +118,7 @@
       border-top: 1px solid white;
     }
 
-    @media (min-width: 1600px) {
+    @media (min-width: 800px) {
       #container {
         max-width: 1600px;
       }
@@ -126,11 +127,11 @@
         flex-direction: row;
         justify-content: center;
         align-items: flex-start;
+        flex-wrap: wrap;
       }
 
       #data .column {
-        margin: 1rem;
-        margin-top: 0;
+        width: 500px;
       }
     }
   </style>
@@ -147,7 +148,7 @@
     <section id="data">
       <div class="column">
         <div class="large">
-          Active Players: <span id="count">???</span>
+          Status: <span id="status-overall">???</span>
         </div>
         <table>
           <thead>
@@ -193,6 +194,47 @@
               <td>
                 <span id="ms-ice">???</span>
               </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column">
+        <div class="large">
+          Active Players: <span id="count">???</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Game Mode</th>
+              <th>#</th>
+              <th>Game Mode</th>
+              <th>#</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Online Menu</td>
+              <td id="online_menu">?</td>
+              <td>Ranked Match</td>
+              <td id="online_ranked">?</td>
+            </tr>
+            <tr>
+              <td>Local Versus</td>
+              <td id="local">?</td>
+              <td>Casual Match</td>
+              <td id="online_casual">?</td>
+            </tr>
+            <tr>
+              <td>Versus CPU</td>
+              <td id="cpu">?</td>
+              <td>Private Match</td>
+              <td id="online_private">?</td>
+            </tr>
+            <tr>
+              <td>Training</td>
+              <td id="training">?</td>
+              <td>Private Lobby</td>
+              <td id="online_lobby">?</td>
             </tr>
           </tbody>
         </table>
@@ -259,6 +301,12 @@
         const data = await poll('https://match.toughlovearena.com/presence');
         const sum = Object.values(data).reduce((c, sum) => sum + c, 0);
         document.getElementById('count').innerText = sum;
+        Object.keys(data).forEach(key => {
+          const elm = document.getElementById(key);
+          if (elm) {
+            elm.innerText = data[key];
+          }
+        })
       } catch (err) {
         console.log(err);
         document.getElementById('count').innerText = '???';
@@ -392,15 +440,20 @@
     }
 
     async function pollAll() {
-      await Promise.all([
-        version(),
-        playerCount(),
-        queueTimes(),
-        checkNoCors('home', 'https://toughlovearena.com'),
-        checkNoCors('match', 'https://match.toughlovearena.com'),
-        checkNoCors('api', 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/'),
-        checkNoCors('ice', 'https://stun.toughlovearena.com/health'),
-      ]);
+      try {
+        const allOk = await Promise.all([
+          version(),
+          playerCount(),
+          queueTimes(),
+          checkNoCors('home', 'https://toughlovearena.com'),
+          checkNoCors('match', 'https://match.toughlovearena.com'),
+          checkNoCors('api', 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/'),
+          checkNoCors('ice', 'https://stun.toughlovearena.com/health'),
+        ]);
+        document.getElementById('status-overall').innerHTML = up();
+      } catch (err) {
+        document.getElementById('status-overall').innerHTML = down();
+      }
       document.getElementById('updated').innerText = new Date().toLocaleTimeString();
     }
 
