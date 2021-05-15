@@ -304,7 +304,7 @@
 
     async function playerCount() {
       try {
-        const data = await poll('https://match.toughlovearena.com/presence');
+        const data = await poll('https://presence.toughlovearena.com');
         const sum = Object.values(data).reduce((c, sum) => sum + c, 0);
         document.getElementById('count').innerText = sum;
         Object.keys(data).forEach(key => {
