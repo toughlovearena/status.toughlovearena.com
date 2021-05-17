@@ -178,6 +178,15 @@
               </td>
             </tr>
             <tr>
+              <td>leaderboard.toughlovearena.com</td>
+              <td>
+                <span id="status-leaderboard">???</span>
+              </td>
+              <td>
+                <span id="ms-leaderboard">???</span>
+              </td>
+            </tr>
+            <tr>
               <td>match.toughlovearena.com</td>
               <td>
                 <span id="status-match">???</span>
@@ -477,6 +486,7 @@
           queueTimes(),
           checkNoCors('home', 'https://toughlovearena.com'),
           checkNoCors('cache', 'https://cache.toughlovearena.com/health'),
+          checkNoCors('leaderboard', 'https://leaderboard.toughlovearena.com/health'),
           checkNoCors('match', 'https://match.toughlovearena.com'),
           checkNoCors('presence', 'https://presence.toughlovearena.com/health'),
           checkNoCors('stun', 'https://stun.toughlovearena.com/health'),
