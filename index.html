@@ -169,7 +169,16 @@
               </td>
             </tr>
             <tr>
-              <td>Matchmaker API</td>
+              <td>cache.toughlovearena.com</td>
+              <td>
+                <span id="status-cache">???</span>
+              </td>
+              <td>
+                <span id="ms-cache">???</span>
+              </td>
+            </tr>
+            <tr>
+              <td>match.toughlovearena.com</td>
               <td>
                 <span id="status-match">???</span>
               </td>
@@ -178,21 +187,30 @@
               </td>
             </tr>
             <tr>
-              <td>Accounts API</td>
+              <td>presence.toughlovearena.com</td>
+              <td>
+                <span id="status-presence">???</span>
+              </td>
+              <td>
+                <span id="ms-presence">???</span>
+              </td>
+            </tr>
+            <tr>
+              <td>stun.toughlovearena.com</td>
+              <td>
+                <span id="status-stun">???</span>
+              </td>
+              <td>
+                <span id="ms-stun">???</span>
+              </td>
+            </tr>
+            <tr>
+              <td>serverless accounts API</td>
               <td>
                 <span id="status-api">???</span>
               </td>
               <td>
                 <span id="ms-api">???</span>
-              </td>
-            </tr>
-            <tr>
-              <td>P2P Broker</td>
-              <td>
-                <span id="status-ice">???</span>
-              </td>
-              <td>
-                <span id="ms-ice">???</span>
               </td>
             </tr>
           </tbody>
@@ -458,9 +476,11 @@
           playerCount(),
           queueTimes(),
           checkNoCors('home', 'https://toughlovearena.com'),
+          checkNoCors('cache', 'https://cache.toughlovearena.com/health'),
           checkNoCors('match', 'https://match.toughlovearena.com'),
+          checkNoCors('presence', 'https://presence.toughlovearena.com/health'),
+          checkNoCors('stun', 'https://stun.toughlovearena.com/health'),
           checkNoCors('api', 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/'),
-          checkNoCors('ice', 'https://stun.toughlovearena.com/health'),
         ]);
         document.getElementById('status-overall').innerHTML = up();
       } catch (err) {
