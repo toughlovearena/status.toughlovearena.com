@@ -322,7 +322,7 @@
     async function news() {
       try {
         const data = await poll('https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/news');
-        const message = data?.message ?? '<i>no news</i>';
+        const message = data?.message || '<i>no news</i>';
         document.getElementById('news').innerHTML = message;
       } catch (err) {
         console.log(err);
