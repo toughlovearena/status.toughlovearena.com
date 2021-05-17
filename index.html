@@ -159,68 +159,40 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr id="home">
               <td>toughlovearena.com</td>
-              <td>
-                <span id="status-home">???</span>
-              </td>
-              <td>
-                <span id="ms-home">???</span>
-              </td>
+              <td>???</td>
+              <td>???</td>
             </tr>
-            <tr>
-              <td>cache.toughlovearena.com</td>
-              <td>
-                <span id="status-cache">???</span>
-              </td>
-              <td>
-                <span id="ms-cache">???</span>
-              </td>
+            <tr id="cache">
+              <td>cache.tla</td>
+              <td>???</td>
+              <td>???</td>
             </tr>
-            <tr>
-              <td>leaderboard.toughlovearena.com</td>
-              <td>
-                <span id="status-leaderboard">???</span>
-              </td>
-              <td>
-                <span id="ms-leaderboard">???</span>
-              </td>
+            <tr id="leaderboard">
+              <td>leaderboard.tla</td>
+              <td>???</td>
+              <td>???</td>
             </tr>
-            <tr>
-              <td>match.toughlovearena.com</td>
-              <td>
-                <span id="status-match">???</span>
-              </td>
-              <td>
-                <span id="ms-match">???</span>
-              </td>
+            <tr id="match">
+              <td>match.tla</td>
+              <td>???</td>
+              <td>???</td>
             </tr>
-            <tr>
-              <td>presence.toughlovearena.com</td>
-              <td>
-                <span id="status-presence">???</span>
-              </td>
-              <td>
-                <span id="ms-presence">???</span>
-              </td>
+            <tr id="presence">
+              <td>presence.tla</td>
+              <td>???</td>
+              <td>???</td>
             </tr>
-            <tr>
-              <td>stun.toughlovearena.com</td>
-              <td>
-                <span id="status-stun">???</span>
-              </td>
-              <td>
-                <span id="ms-stun">???</span>
-              </td>
+            <tr id="stun">
+              <td>stun.tla</td>
+              <td>???</td>
+              <td>???</td>
             </tr>
-            <tr>
+            <tr id="api">
               <td>serverless accounts API</td>
-              <td>
-                <span id="status-api">???</span>
-              </td>
-              <td>
-                <span id="ms-api">???</span>
-              </td>
+              <td>???</td>
+              <td>???</td>
             </tr>
           </tbody>
         </table>
@@ -300,22 +272,33 @@
       });
       return resp.ok;
     }
-    function up() {
-      return `<span class="up">OK</span>`;
+    function up(url) {
+      return `
+        <a href="${url}" target="_blank" style="text-decoration: none;">
+          <span class="up">OK</span>
+        </a>
+      `.trim();
     }
-    function down() {
-      return `<span class="down">DOWN</span>`;
+    function down(url) {
+      return `
+        <a href="${url}" target="_blank" style="text-decoration: none;">
+          <span class="down">DOWN</span>
+        </a>
+      `.trim();
     }
     async function checkNoCors(tag, url) {
       const start = new Date().getTime();
+      const row = document.getElementById(tag);
+      const [elmLabel, elmStatus, elmMS] = Array.from(row.children);
+      console.log(tag, elmLabel, elmStatus, elmMS);
       try {
         await nocors(url);
-        document.getElementById(`status-${tag}`).innerHTML = up();
+        elmStatus.innerHTML = up(url);
       } catch (err) {
         console.log(err);
-        document.getElementById(`status-${tag}`).innerHTML = down();
+        elmStatus.innerHTML = down(url);
       }
-      document.getElementById(`ms-${tag}`).innerText = (new Date().getTime() - start);
+      elmMS.innerText = (new Date().getTime() - start);
     }
 
     async function version() {
