@@ -380,8 +380,11 @@
       return results;
     }
     function convertQueueTimesToData(queueTimes) {
+      console.log(queueTimes);
       const lookup = {};
       const latestDate = Object.keys(queueTimes).sort().pop();
+      if (!latestDate) { return; }
+
       const queueDate = queueTimes[latestDate];
       for (const key in queueDate) {
         const seconds = parseFloat(key.split('s')[0]);
@@ -424,6 +427,8 @@
         }];
         queues.forEach(q => {
           const graphData = convertQueueTimesToData(q.queueTimes);
+          if (!graphData) { return; }
+
           while (q.chart.data.labels.length) {
             q.chart.data.labels.pop();
           }
