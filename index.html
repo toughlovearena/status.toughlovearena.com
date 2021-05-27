@@ -298,14 +298,20 @@
       const row = document.getElementById(tag);
       const [elmLabel, elmStatus, elmMS] = Array.from(row.children);
       console.log(tag, elmLabel, elmStatus, elmMS);
+      let failed = false;
       try {
-        await nocors(url);
-        elmStatus.innerHTML = up(url);
+        const ok = await nocors(url);
+        elmStatus.innerHTML = ok ? up(url) : down(url);
+        failed = !ok;
       } catch (err) {
         console.log(err);
         elmStatus.innerHTML = down(url);
+        failed = true;
       }
       elmMS.innerText = (new Date().getTime() - start);
+      if (failed) {
+        throw new Error('nocors failed for ' + url);
+      }
     }
 
     async function version() {
