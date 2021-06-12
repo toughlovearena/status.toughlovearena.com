@@ -170,6 +170,11 @@
               <td>???</td>
               <td>???</td>
             </tr>
+            <tr id="handshake">
+              <td>handshake.tla</td>
+              <td>???</td>
+              <td>???</td>
+            </tr>
             <tr id="leaderboard">
               <td>leaderboard.tla</td>
               <td>???</td>
@@ -492,6 +497,7 @@
           queueTimes(),
           checkNoCors('home', 'https://toughlovearena.com/version.json'),
           checkNoCors('cache', 'https://cache.toughlovearena.com/health'),
+          checkNoCors('handshake', 'https://handshake.toughlovearena.com/health'),
           checkNoCors('leaderboard', 'https://leaderboard.toughlovearena.com/health'),
           checkNoCors('match', 'https://match.toughlovearena.com'),
           checkNoCors('presence', 'https://presence.toughlovearena.com/health'),
