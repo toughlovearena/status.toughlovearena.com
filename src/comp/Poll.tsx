@@ -38,7 +38,7 @@ export function Poll(props: {
     setPingMs(Math.round(after - before));
   }, [url, report, setIsUp, setPingMs]);
 
-  // useLoop(() => checkIsUp());
+  useLoop(() => checkIsUp());
 
   return (
     <tr>

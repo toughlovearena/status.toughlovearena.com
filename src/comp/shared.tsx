@@ -3,7 +3,6 @@ import { IntervalCallback, useInterval } from './useInterval';
 
 const PERIOD = 30 * 1000;
 export function useLoop(cb: IntervalCallback) {
-  cb();
   useInterval(cb, PERIOD);
 }
 export function fetchNoCache(url: string) {

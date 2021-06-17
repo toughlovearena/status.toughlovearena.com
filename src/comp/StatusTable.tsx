@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Poll } from './Poll';
 import styled from 'styled-components';
 import { DataSection, DataTable, SectionTitle } from './shared';
@@ -33,14 +33,16 @@ const StatusLabel = styled.a<{ isUp: boolean }>`
   color: ${props => props.isUp ? 'lightgreen' : 'salmon'};
 `;
 
+// todo not sure where to put this w/ hooks
+const records: Record<string, boolean> = {};
+
 export function StatusTable() {
-  const records: Record<string, boolean> = {};
   const [allUp, setAllUp] = useState(undefined as boolean | undefined);
 
-  const reportPoll = (url: string, success: boolean) => {
+  const reportPoll = useCallback((url: string, success: boolean) => {
     records[url] = success;
     setAllUp(Object.values(records).every(b => b));
-  };
+  }, [setAllUp]);
 
   return (
     <DataSection>
