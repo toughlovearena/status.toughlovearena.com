@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { fetchNoCache, PERIOD } from './shared';
+import { fetchNoCache, useLoop } from './shared';
 
 const PollLink = styled.a<{ isUp: boolean }>`
   color: ${props => props.isUp ? 'lightgreen' : 'salmon'};
@@ -36,12 +36,9 @@ export function Poll(props: {
     }
     const after = performance.now();
     setPingMs(Math.round(after - before));
-  }, [url, setIsUp, setPingMs]);
+  }, [url, report, setIsUp, setPingMs]);
 
-  useEffect(() => {
-    checkIsUp();
-    setInterval(() => checkIsUp(), PERIOD);
-  }, [checkIsUp]);
+  // useLoop(() => checkIsUp());
 
   return (
     <tr>

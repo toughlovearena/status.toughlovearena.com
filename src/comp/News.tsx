@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { fetchNoCache, PERIOD } from './shared';
+import React, { useCallback, useState } from 'react';
+import { fetchNoCache, useLoop } from './shared';
 
 export function News() {
   const [news, setNews] = useState(undefined as string | undefined);
@@ -10,10 +10,7 @@ export function News() {
     setNews(data.message);
   }, [setNews]);
 
-  useEffect(() => {
-    fetchNews();
-    setInterval(() => fetchNews(), PERIOD);
-  }, [fetchNews]);
+  useLoop(() => fetchNews());
 
   const newsCopy = (
     (news === undefined && '???') ||

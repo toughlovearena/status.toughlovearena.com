@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { fetchNoCache, PERIOD, DataSection, SectionTitle, DataTable } from './shared';
+import React, { useCallback, useState } from 'react';
+import { fetchNoCache, DataSection, SectionTitle, DataTable, useLoop } from './shared';
 
 export function ActivePlayers() {
   const [counts, setCounts] = useState(undefined as Record<string, number> | undefined);
@@ -10,10 +10,7 @@ export function ActivePlayers() {
     setCounts(counts);
   }, [setCounts]);
 
-  useEffect(() => {
-    fetchCounts();
-    setInterval(() => fetchCounts(), PERIOD);
-  }, [fetchCounts]);
+  useLoop(() => fetchCounts());
 
   const total = counts ? Object.values(counts).reduce((c, sum) => sum + c, 0) : '???';
   const renderCount = (key: string) => (counts && counts[key]) ?? '?';
