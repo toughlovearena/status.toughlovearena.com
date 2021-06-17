@@ -15,13 +15,13 @@ export function ActivePlayers() {
     setInterval(() => fetchCounts(), PERIOD);
   }, [fetchCounts]);
 
-  const total = counts && Object.values(counts).reduce((c, sum) => sum + c, 0);
+  const total = counts ? Object.values(counts).reduce((c, sum) => sum + c, 0) : '???';
   const renderCount = (key: string) => (counts && counts[key]) ?? '?';
 
   return (
     <DataSection>
       <SectionTitle>
-        Active Players: {total ?? '???'}
+        Active Players: {total}
       </SectionTitle>
       <DataTable>
         <thead>
