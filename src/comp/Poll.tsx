@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CRON } from '../cron';
-import { fetchNoCache } from './shared';
+import { fetchNoCache } from '../util';
 
 const PollLink = styled.a<{ isUp: boolean }>`
   color: ${props => props.isUp ? 'lightgreen' : 'salmon'};

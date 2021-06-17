@@ -1,9 +1,5 @@
 import styled from 'styled-components';
 
-export function fetchNoCache(url: string) {
-  return fetch(url + '?cache=' + new Date().getTime());
-}
-
 export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;

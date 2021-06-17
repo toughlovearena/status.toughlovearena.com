@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { CRON } from '../cron';
-import { fetchNoCache } from './shared';
+import { fetchNoCache } from '../util';
 
 export function News() {
   const [news, setNews] = useState(undefined as string | undefined);

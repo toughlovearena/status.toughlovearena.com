@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { CRON } from '../cron';
-import { fetchNoCache } from './shared';
+import { fetchNoCache } from '../util';
 
 export function Version() {
   const [version, setVersion] = useState(undefined as string | undefined);
