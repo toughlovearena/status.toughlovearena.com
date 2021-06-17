@@ -3,17 +3,16 @@ import { Chart } from 'chart.js';
 export class ChartRef {
   readonly chart: Chart;
   constructor(args: {
-    id: string;
+    canvasElm: HTMLCanvasElement;
     label: string;
     colorRGB: { r: number, g: number, b: number },
   }) {
     const {
-      id,
+      canvasElm,
       label,
       colorRGB,
     } = args;
-    const canvas = document.getElementById(id) as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvasElm.getContext('2d')!;
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -56,7 +55,7 @@ export class ChartRef {
           }],
         },
       }
-    });
+    } as any);
     this.chart = myChart;
   }
 }

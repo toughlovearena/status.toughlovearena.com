@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { CRON } from '../cron';
-import { fetchNoCache, DataSection, SectionTitle, DataTable } from './shared';
+import { DataSection, SectionTitle, DataTable } from './shared';
+import { fetchNoCache } from '../util';
 
 export function ActivePlayers() {
   const [counts, setCounts] = useState(undefined as Record<string, number> | undefined);

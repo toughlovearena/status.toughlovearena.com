@@ -1,6 +1,6 @@
 import { ChartRef } from './chart';
 import { CRON } from './cron';
-import { chunk, fetchNoCache } from './util';
+import { chunk, fetchNoCache, range } from './util';
 
 type QueueTimes = Record<string, Record<string, number>>;
 type QueueData = {
@@ -14,26 +14,30 @@ type ServerData = {
   casual: QueueData;
   ranked: QueueData;
 }
+type QueueRef = {
+  chart: ChartRef;
+  setAverage(average: number | undefined): void;
+}
 
 class QueueTimesSingleton {
-  private casual: ChartRef | undefined;
-  private ranked: ChartRef | undefined;
+  private casual: QueueRef | undefined;
+  private ranked: QueueRef | undefined;
   constructor() {
     CRON.register('chart', () => this.step());
   }
 
-  registerCasual(cr: ChartRef) {
+  registerCasual(cr: QueueRef) {
     this.casual = cr;
     this.step();
   }
-  registerRanked(cr: ChartRef) {
+  registerRanked(cr: QueueRef) {
     this.ranked = cr;
     this.step();
   }
 
   private convertQueueTimesToData(queueTimes: QueueTimes) {
     console.log(queueTimes);
-    const lookup = {};
+    const lookup: Record<string, number> = {};
     const latestDate = Object.keys(queueTimes).sort().pop();
     if (!latestDate) { return; }
 
@@ -55,55 +59,52 @@ class QueueTimesSingleton {
     }
     const average = sum / sumCount;
     const highest = Math.max(...dataSet.map(d => d.seconds));
-    const allLabels = [...Array(highest + 1).keys()];
+    const allLabels = range(highest + 1);
     const allValues = allLabels.map(i => lookup[i.toString()] || 0);
     const labels = chunk(allLabels, 5).map(c => `${c[0]} - ${c.concat().pop()}`);
     const values = chunk(allValues, 5).map(c => c.reduce((sum, curr) => sum + curr, 0));
     return { labels, values, average };
   }
   private async step() {
+    const queues: { queueTimes: QueueTimes, ref: QueueRef }[] = [];
     try {
       const response = await fetchNoCache('https://match.toughlovearena.com/details');
       const servers = await response.json() as ServerData[];
       const prod = servers.filter(s => s.label === 'prod')[0];
-      const queues = [];
       if (this.casual) {
         queues.push({
           queueTimes: prod.casual.queueTimes,
-          avgId: 'queue-casual',
-          chart: this.casual.chart,
+          ref: this.casual,
         });
       }
       if (this.ranked) {
         queues.push({
           queueTimes: prod.ranked.queueTimes,
-          avgId: 'queue-ranked',
-          chart: this.ranked.chart,
+          ref: this.ranked,
         });
       }
       queues.forEach(q => {
         const graphData = this.convertQueueTimesToData(q.queueTimes);
         if (!graphData) { return; }
 
-        while (q.chart.data.labels.length) {
-          q.chart.data.labels.pop();
+        while (q.ref.chart.chart.data.labels?.length) {
+          q.ref.chart.chart.data.labels.pop();
         }
-        q.chart.data.datasets.forEach(ds => {
+        q.ref.chart.chart.data.datasets.forEach(ds => {
           while (ds.data.length) {
             ds.data.pop();
           }
         });
-        graphData.labels.forEach(lab => q.chart.data.labels.push(lab));
-        graphData.values.forEach(val => q.chart.data.datasets.forEach(ds => ds.data.push(val)));
-        q.chart.update();
-        // document.getElementById(q.avgId).innerText = Math.round(graphData.average);
+        graphData.labels.forEach(lab => q.ref.chart.chart.data.labels!.push(lab));
+        graphData.values.forEach(val => q.ref.chart.chart.data.datasets.forEach(ds => ds.data.push(val)));
+        q.ref.chart.chart.update();
+        q.ref.setAverage(Math.round(graphData.average));
       });
     } catch (err) {
       console.log(err);
-      // queues.forEach(q => {
-      //   document.getElementById('queue-ranked').innerText = '???';
-      //   document.getElementById('queue-casual').innerText = '???';
-      // });
+      queues.forEach(q => {
+        q.ref.setAverage(undefined);
+      });
     }
   }
 }
