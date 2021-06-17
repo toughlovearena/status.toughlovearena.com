@@ -14,8 +14,12 @@ export function News() {
 
   const newsCopy = (
     (news === undefined && '???') ||
-    (!news && <i>no news</i>) ||
-    news
+    news ||
+    '<i>no news</i>'
   );
-  return <div>News: {newsCopy}</div>;
+  return (
+    <div>News:
+      <span dangerouslySetInnerHTML={{ __html: newsCopy, }} />
+    </div>
+  );
 }
