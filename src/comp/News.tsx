@@ -18,8 +18,8 @@ export function News() {
     '<i>no news</i>'
   );
   return (
-    <div>News:
-      <span dangerouslySetInnerHTML={{ __html: newsCopy, }} />
+    <div>
+      News: <span dangerouslySetInnerHTML={{ __html: newsCopy, }} />
     </div>
   );
 }

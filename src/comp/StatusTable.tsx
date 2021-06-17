@@ -25,7 +25,7 @@ const polls = [{
   label: 'stun.tla',
   url: 'https://stun.toughlovearena.com/health',
 }, {
-  label: 'api',
+  label: 'serverless accounts API	',
   url: 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/',
 }];
 
