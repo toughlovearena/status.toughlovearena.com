@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import { MainContainer, DataContainer } from './shared';
 import { StatusTable } from './StatusTable';
+import { Version } from './Version';
+import { News } from './News';
 import { ActivePlayers } from './ActivePlayers';
 
 export function App() {
@@ -10,8 +12,8 @@ export function App() {
       <header>
         <img id="logo" src="logo.png" alt="logo" />
         <div>Tough Love Arena Status Page</div>
-        <div>v<span id="version">???</span></div>
-        <div>News: <span id="news">???</span></div>
+        <Version />
+        <News />
       </header>
 
       <DataContainer>
