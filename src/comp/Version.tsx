@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
-import { fetchNoCache, useLoop } from './shared';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CRON } from '../cron';
+import { fetchNoCache } from './shared';
 
 export function Version() {
   const [version, setVersion] = useState(undefined as string | undefined);
@@ -9,8 +10,7 @@ export function Version() {
     const data = await response.json() as { v: string, u: string, };
     setVersion(data.v);
   }, [setVersion]);
-
-  useLoop(() => fetchVersion());
+  useEffect(() => CRON.register('version', () => fetchVersion()), [fetchVersion]);
 
   return <div>v{version ?? '???'}</div>;
 }

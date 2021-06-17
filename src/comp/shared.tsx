@@ -1,10 +1,5 @@
 import styled from 'styled-components';
-import { IntervalCallback, useInterval } from './useInterval';
 
-const PERIOD = 30 * 1000;
-export function useLoop(cb: IntervalCallback) {
-  useInterval(cb, PERIOD);
-}
 export function fetchNoCache(url: string) {
   return fetch(url + '?cache=' + new Date().getTime());
 }

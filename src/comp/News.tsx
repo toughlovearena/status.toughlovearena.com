@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
-import { fetchNoCache, useLoop } from './shared';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CRON } from '../cron';
+import { fetchNoCache } from './shared';
 
 export function News() {
   const [news, setNews] = useState(undefined as string | undefined);
@@ -9,8 +10,7 @@ export function News() {
     const data = await response.json() as { message: string, };
     setNews(data.message);
   }, [setNews]);
-
-  useLoop(() => fetchNews());
+  useEffect(() => CRON.register('news', () => fetchNews()), [fetchNews]);
 
   const newsCopy = (
     (news === undefined && '???') ||

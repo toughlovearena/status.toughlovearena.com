@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
-import { fetchNoCache, DataSection, SectionTitle, DataTable, useLoop } from './shared';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CRON } from '../cron';
+import { fetchNoCache, DataSection, SectionTitle, DataTable } from './shared';
 
 export function ActivePlayers() {
   const [counts, setCounts] = useState(undefined as Record<string, number> | undefined);
@@ -9,8 +10,7 @@ export function ActivePlayers() {
     const counts = await response.json() as Record<string, number>;
     setCounts(counts);
   }, [setCounts]);
-
-  useLoop(() => fetchCounts());
+  useEffect(() => CRON.register('activePlayers', () => fetchCounts()), [fetchCounts]);
 
   const total = counts ? Object.values(counts).reduce((c, sum) => sum + c, 0) : '???';
   const renderCount = (key: string) => (counts && counts[key]) ?? '?';
