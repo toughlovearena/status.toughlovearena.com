@@ -1,12 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+const PollLink = styled.a<{ isUp: boolean }>`
+  color: ${props => props.isUp ? 'lightgreen' : 'salmon'};
+  text-decoration: none;
+`;
 
 export function Poll(props: {
   label: string;
   url: string;
+  report(ok: boolean): void;
 }) {
   const {
     label,
     url,
+    report,
   } = props;
 
   const [isUp, setIsUp] = useState(undefined as boolean | undefined);
@@ -20,8 +28,10 @@ export function Poll(props: {
         throw new Error('fetch failed: ' + url);
       }
       setIsUp(true);
+      report(true);
     } catch (err) {
       setIsUp(false);
+      report(false);
     }
     const after = performance.now();
     setPingMs(Math.round(after - before));
@@ -37,9 +47,9 @@ export function Poll(props: {
       <td>{label}</td>
       <td>
         {isUp === undefined ? '???' : (
-          <a href={url} style={{ color: isUp ? 'lightgreen' : 'salmon', }}>
+          <PollLink href={url} isUp={isUp}>
             {isUp ? 'OK' : 'DOWN'}
-          </a>
+          </PollLink>
         )}
       </td>
       <td>

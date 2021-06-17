@@ -1,32 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Poll } from './Poll';
-
-const polls = [{
-  label: 'toughlovearena.com',
-  url: 'https://toughlovearena.com/version.json',
-}, {
-  label: 'cache.tla',
-  url: 'https://cache.toughlovearena.com/health',
-}, {
-  label: 'handshake.tla',
-  url: 'https://handshake.toughlovearena.com/health',
-}, {
-  label: 'leaderboard.tla',
-  url: 'https://leaderboard.toughlovearena.com/health',
-}, {
-  label: 'match.tla',
-  url: 'https://match.toughlovearena.com',
-}, {
-  label: 'presence.tla',
-  url: 'https://presence.toughlovearena.com/health',
-}, {
-  label: 'stun.tla',
-  url: 'https://stun.toughlovearena.com/health',
-}, {
-  label: 'api',
-  url: 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/',
-}];
+import { StatusTable } from './StatusTable';
 
 export function App() {
   return (
@@ -39,23 +13,7 @@ export function App() {
       </header>
 
       <section id="data">
-        <div className="column">
-          <div className="large">
-            Status: <span id="status-overall">???</span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Service</th>
-                <th>Status</th>
-                <th>ms</th>
-              </tr>
-            </thead>
-            <tbody>
-              {polls.map((pd, pi) => <Poll key={pi} {...pd} />)}
-            </tbody>
-          </table>
-        </div>
+        <StatusTable />
         <div className="column">
           <div className="large">
             Active Players: <span id="count">???</span>
