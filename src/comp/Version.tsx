@@ -12,5 +12,11 @@ export function Version() {
   }, [setVersion]);
   useEffect(() => CRON.register('version', () => fetchVersion()), [fetchVersion]);
 
-  return <div>v{version ?? '???'}</div>;
+  return (
+    <div>
+      <a href='https://toughlovearena.com?changelog'>
+        v{version ?? '???'}
+      </a>
+    </div>
+  );
 }
