@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Poll } from './Poll';
 import styled from 'styled-components';
+import { Section, SectionTitle } from './shared';
 
 const polls = [{
   label: 'toughlovearena.com',
@@ -42,14 +43,14 @@ export function StatusTable() {
   };
 
   return (
-    <div className="column">
-      <div className="large">
+    <Section>
+      <SectionTitle>
         Status: {allUp === undefined ? '???' : (
           <StatusLabel isUp={allUp}>
             {allUp ? 'OK' : 'DOWN'}
           </StatusLabel>
         )}
-      </div>
+      </SectionTitle>
       <table>
         <thead>
           <tr>
@@ -68,6 +69,6 @@ export function StatusTable() {
           ))}
         </tbody>
       </table>
-    </div>
+    </Section>
   )
 }

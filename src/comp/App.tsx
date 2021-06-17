@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { StatusTable } from './StatusTable';
+import { ActivePlayers } from './ActivePlayers';
 
 export function App() {
   return (
@@ -14,53 +15,7 @@ export function App() {
 
       <section id="data">
         <StatusTable />
-        <div className="column">
-          <div className="large">
-            Active Players: <span id="count">???</span>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Game Mode</th>
-                <th>#</th>
-                <th>Game Mode</th>
-                <th>#</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Welcome</td>
-                <td id="welcome">?</td>
-                <td>Online Menu</td>
-                <td id="online_menu">?</td>
-              </tr>
-              <tr>
-                <td>Tutorial</td>
-                <td id="tutorial">?</td>
-                <td>Ranked Match</td>
-                <td id="online_ranked">?</td>
-              </tr>
-              <tr>
-                <td>Local Versus</td>
-                <td id="local">?</td>
-                <td>Casual Match</td>
-                <td id="online_casual">?</td>
-              </tr>
-              <tr>
-                <td>Versus CPU</td>
-                <td id="cpu">?</td>
-                <td>Private Match</td>
-                <td id="online_private">?</td>
-              </tr>
-              <tr>
-                <td>Training</td>
-                <td id="training">?</td>
-                <td>Private Lobby</td>
-                <td id="online_lobby">?</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <ActivePlayers />
         <div className="column">
           <div className="large">
             Ranked Queue Time: <span id="queue-ranked">???</span> seconds

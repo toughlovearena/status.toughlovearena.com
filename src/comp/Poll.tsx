@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { fetchNoCache, PERIOD } from './shared';
 
 const PollLink = styled.a<{ isUp: boolean }>`
   color: ${props => props.isUp ? 'lightgreen' : 'salmon'};
@@ -23,7 +24,7 @@ export function Poll(props: {
   const checkIsUp = useCallback(async () => {
     const before = performance.now();
     try {
-      const response = await fetch(url + '?cache=' + before);
+      const response = await fetchNoCache(url);
       if (!response.ok) {
         throw new Error('fetch failed: ' + url);
       }
@@ -39,7 +40,7 @@ export function Poll(props: {
 
   useEffect(() => {
     checkIsUp();
-    setInterval(() => checkIsUp(), 30 * 1000);
+    setInterval(() => checkIsUp(), PERIOD);
   }, [checkIsUp]);
 
   return (
