@@ -18,6 +18,9 @@ type QueueRef = {
   chart: ChartRef;
   setAverage(average: number | undefined): void;
 }
+type DataSet = {
+  data: any[];
+}
 
 class QueueTimesSingleton {
   private casual: QueueRef | undefined;
@@ -90,13 +93,13 @@ class QueueTimesSingleton {
         while (q.ref.chart.chart.data.labels?.length) {
           q.ref.chart.chart.data.labels.pop();
         }
-        q.ref.chart.chart.data.datasets.forEach(ds => {
+        q.ref.chart.chart.data.datasets.forEach((ds: DataSet) => {
           while (ds.data.length) {
             ds.data.pop();
           }
         });
         graphData.labels.forEach(lab => q.ref.chart.chart.data.labels!.push(lab));
-        graphData.values.forEach(val => q.ref.chart.chart.data.datasets.forEach(ds => ds.data.push(val)));
+        graphData.values.forEach(val => q.ref.chart.chart.data.datasets.forEach((ds: DataSet) => ds.data.push(val)));
         q.ref.chart.chart.update();
         q.ref.setAverage(Math.round(graphData.average));
       });
