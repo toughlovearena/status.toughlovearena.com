@@ -53,3 +53,20 @@ export const SectionTitle = styled.div`
   margin: 1em 0;
   margin-bottom: 0.5em;
 `;
+
+export const DataTable = styled.table`
+  font-size: 1rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: center;
+    border: 1px solid grey;
+    padding: 0.5em 1em;
+    background-color: rgb(60, 60, 60);
+  }
+
+  th {
+    background-color: inherit;
+  }
+`;

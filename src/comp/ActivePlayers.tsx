@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { fetchNoCache, PERIOD, DataSection, SectionTitle } from './shared';
+import { fetchNoCache, PERIOD, DataSection, SectionTitle, DataTable } from './shared';
 
 export function ActivePlayers() {
   const [counts, setCounts] = useState(undefined as Record<string, number> | undefined);
@@ -23,7 +23,7 @@ export function ActivePlayers() {
       <SectionTitle>
         Active Players: {total ?? '???'}
       </SectionTitle>
-      <table>
+      <DataTable>
         <thead>
           <tr>
             <th>Game Mode</th>
@@ -64,7 +64,7 @@ export function ActivePlayers() {
             <td>{renderCount('online_lobby')}</td>
           </tr>
         </tbody>
-      </table>
+      </DataTable>
     </DataSection>
   );
 }

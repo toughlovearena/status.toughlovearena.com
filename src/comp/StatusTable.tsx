@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Poll } from './Poll';
 import styled from 'styled-components';
-import { DataSection, SectionTitle } from './shared';
+import { DataSection, DataTable, SectionTitle } from './shared';
 
 const polls = [{
   label: 'toughlovearena.com',
@@ -51,7 +51,7 @@ export function StatusTable() {
           </StatusLabel>
         )}
       </SectionTitle>
-      <table>
+      <DataTable>
         <thead>
           <tr>
             <th>Service</th>
@@ -68,7 +68,7 @@ export function StatusTable() {
             />
           ))}
         </tbody>
-      </table>
+      </DataTable>
     </DataSection>
   )
 }
