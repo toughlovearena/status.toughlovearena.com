@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
+import { MainContainer, DataContainer } from './shared';
 import { StatusTable } from './StatusTable';
 import { ActivePlayers } from './ActivePlayers';
 
 export function App() {
   return (
-    <div id="container" className="column">
+    <MainContainer>
       <header>
         <img id="logo" src="logo.png" alt="logo" />
         <div>Tough Love Arena Status Page</div>
@@ -13,7 +14,7 @@ export function App() {
         <div>News: <span id="news">???</span></div>
       </header>
 
-      <section id="data">
+      <DataContainer>
         <StatusTable />
         <ActivePlayers />
         <div className="column">
@@ -28,7 +29,7 @@ export function App() {
           </div>
           <canvas id="chart-casual"></canvas>
         </div>
-      </section>
+      </DataContainer>
 
       <footer>
         Updates every 30 seconds
@@ -37,6 +38,6 @@ export function App() {
         <br />
         If anything is down, please email <a href="mailto:toughlovearena@gmail.com">toughlovearena@gmail.com</a>
       </footer>
-    </div>
+    </MainContainer>
   );
 }
