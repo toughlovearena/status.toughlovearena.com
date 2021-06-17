@@ -6,6 +6,7 @@ import { Version } from './Version';
 import { News } from './News';
 import { ActivePlayers } from './ActivePlayers';
 import { RankedQueueTimes } from './RankedQueueTimes';
+import { CasualQueueTimes } from './CasualQueueTimes';
 
 export function App() {
   return (
@@ -21,12 +22,7 @@ export function App() {
         <StatusTable />
         <ActivePlayers />
         <RankedQueueTimes />
-        <div className="column">
-          <div className="large">
-            Casual Queue Time: <span id="queue-casual">???</span> seconds
-          </div>
-          <canvas id="chart-casual"></canvas>
-        </div>
+        <CasualQueueTimes />
       </DataContainer>
 
       <footer>
