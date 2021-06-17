@@ -1,4 +1,4 @@
-import Chart from 'chart.js/auto';
+import { BarController, BarElement, CategoryScale, Chart, ChartType, LinearScale } from 'chart.js';
 
 export class ChartRef {
   readonly chart: Chart;
@@ -13,8 +13,9 @@ export class ChartRef {
       colorRGB,
     } = args;
     const ctx = canvasElm.getContext('2d')!;
+    Chart.register(BarController, BarElement, CategoryScale, LinearScale);
     const myChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'bar' as ChartType,
       data: {
         labels: [],
         datasets: [{
@@ -26,36 +27,38 @@ export class ChartRef {
         }]
       },
       options: {
-        legend: {
-          display: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
         },
         responsive: true,
-        // maintainAspectRatio: true,
+        maintainAspectRatio: true,
         scales: {
-          xAxes: [{
-            scaleLabel: {
+          x: {
+            title: {
               display: true,
-              labelString: 'seconds waiting for match',
-              fontColor: 'white',
+              text: 'seconds waiting for match',
+              color: 'white',
             },
             ticks: {
-              fontColor: 'white',
+              color: 'white',
             },
-          }],
-          yAxes: [{
-            scaleLabel: {
+          },
+          y: {
+            beginAtZero: true,
+            title: {
               display: true,
-              labelString: 'matches',
-              fontColor: 'white',
+              text: 'matches',
+              color: 'white',
             },
             ticks: {
-              beginAtZero: true,
-              fontColor: 'white',
+              color: 'white',
             },
-          }],
+          },
         },
       }
-    } as any);
+    });
     this.chart = myChart;
   }
 }
