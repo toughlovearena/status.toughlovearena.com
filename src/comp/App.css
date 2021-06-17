@@ -1,0 +1,117 @@
+
+html {
+  font-size: 20px;
+
+  background-color: rgb(30, 30, 30);
+  color: white;
+}
+
+body {
+  font-family: 'Fightura';
+
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+a {
+  color: #91D2FA
+}
+
+#container {
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  max-width: 800px;
+}
+
+/* shared */
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.large {
+  font-size: 1.5em;
+  margin: 1em 0;
+  margin-bottom: 0.5em;
+}
+
+/* header */
+header {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid white;
+}
+
+#logo {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+/* center */
+#data {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+table {
+  font-size: 1rem;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: center;
+  border: 1px solid grey;
+  padding: 0.5em 1em;
+  background-color: rgb(60, 60, 60);
+}
+
+th {
+  background-color: inherit;
+}
+
+.up {
+  color: lightgreen;
+}
+
+.down {
+  color: salmon;
+}
+
+/* footer */
+footer {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid white;
+}
+
+@media (min-width: 800px) {
+  #container {
+    max-width: 1200px;
+  }
+
+  #data {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  #data .column {
+    width: 500px;
+  }
+}
