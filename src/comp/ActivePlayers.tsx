@@ -34,32 +34,32 @@ export function ActivePlayers() {
           <tr>
             <td>Welcome</td>
             <td>{renderCount('welcome')}</td>
-            <td>Online Menu</td>
-            <td>{renderCount('online_menu')}</td>
-          </tr>
-          <tr>
-            <td>Tutorial</td>
-            <td>{renderCount('tutorial')}</td>
             <td>Ranked Match</td>
             <td>{renderCount('online_ranked')}</td>
           </tr>
           <tr>
-            <td>Local Versus</td>
-            <td>{renderCount('local')}</td>
+            <td>Tutorial</td>
+            <td>{renderCount('tutorial')}</td>
             <td>Casual Match</td>
             <td>{renderCount('online_casual')}</td>
           </tr>
           <tr>
-            <td>Versus CPU</td>
-            <td>{renderCount('cpu')}</td>
+            <td>Local Versus</td>
+            <td>{renderCount('local')}</td>
             <td>Private Match</td>
             <td>{renderCount('online_private')}</td>
           </tr>
           <tr>
-            <td>Training</td>
-            <td>{renderCount('training')}</td>
+            <td>Versus CPU</td>
+            <td>{renderCount('cpu')}</td>
             <td>Private Lobby</td>
             <td>{renderCount('online_lobby')}</td>
+          </tr>
+          <tr>
+            <td>Training</td>
+            <td>{renderCount('training')}</td>
+            <td>Modding</td>
+            <td>{renderCount('modding')}</td>
           </tr>
         </tbody>
       </DataTable>
