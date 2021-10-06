@@ -22,6 +22,9 @@ const polls = [{
   label: 'presence.tla',
   url: 'https://presence.toughlovearena.com/health',
 }, {
+  label: 'lobby.tla',
+  url: 'https://lobby.toughlovearena.com/health',
+}, {
   label: 'stun.tla',
   url: 'https://stun.toughlovearena.com/health',
 }, {
