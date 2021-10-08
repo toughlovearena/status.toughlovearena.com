@@ -1,9 +1,11 @@
+import { isLongPoll } from "./util";
+
 interface IntervalCallback {
   (): void;
 }
 
 class CronSingleton {
-  private readonly PERIOD = 30 * 1000;
+  private readonly PERIOD = (isLongPoll() ? 300 : 30) * 1000;
   private readonly callbacks: Record<string, IntervalCallback | undefined> = {};
   constructor() {
     setInterval(() => this.step(), this.PERIOD);

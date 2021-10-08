@@ -1,4 +1,8 @@
 
+export function isLongPoll() {
+  return !!(new URLSearchParams(window.location.search).get('long'));
+}
+
 export function fetchNoCache(url: string) {
   return fetch(url + '?cache=' + new Date().getTime());
 }
