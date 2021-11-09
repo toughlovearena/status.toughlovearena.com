@@ -8,6 +8,7 @@ import { ActivePlayers } from './ActivePlayers';
 import { RankedQueueTimes } from './RankedQueueTimes';
 import { CasualQueueTimes } from './CasualQueueTimes';
 import { CRON } from '../cron';
+import { isSimple } from '../util';
 
 const Header = styled.div`
   padding-bottom: 0.5rem;
@@ -20,7 +21,7 @@ const Logo = styled.img`
   height: auto;
 `;
 const Footer = styled.div`
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   padding-top: 0.5rem;
   border-top: 1px solid white;
 `;
@@ -29,6 +30,7 @@ export function App() {
   const [updated, setUpdated] = useState(undefined as Date | undefined);
   useEffect(() => CRON.register('updated', () => setUpdated(new Date())), [setUpdated]);
 
+  const isSimpleView = isSimple();
   return (
     <MainContainer>
       <Header>
@@ -41,8 +43,8 @@ export function App() {
       <DataContainer>
         <StatusTable />
         <ActivePlayers />
-        <RankedQueueTimes />
-        <CasualQueueTimes />
+        {!isSimpleView && <RankedQueueTimes />}
+        {!isSimpleView && <CasualQueueTimes />}
       </DataContainer>
 
       <Footer>
