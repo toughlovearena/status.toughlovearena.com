@@ -16,8 +16,8 @@ const polls = [{
   label: 'leaderboard.tla',
   url: 'https://leaderboard.toughlovearena.com/health',
 }, {
-  label: 'match.tla',
-  url: 'https://match.toughlovearena.com',
+  label: 'matchmaker.tla',
+  url: 'https://matchmaker.toughlovearena.com',
 }, {
   label: 'presence.tla',
   url: 'https://presence.toughlovearena.com/health',
