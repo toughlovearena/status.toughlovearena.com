@@ -68,7 +68,7 @@ class QueueTimesSingleton {
   private async step() {
     const queues: { queueTimes: QueueTimes, ref: QueueRef }[] = [];
     try {
-      const response = await fetchNoCache('https://match.toughlovearena.com/details');
+      const response = await fetchNoCache('https://matchmaker.toughlovearena.com/details');
       const servers = await response.json() as ServerData[];
       const prod = servers.filter(s => s.label === 'prod')[0];
       if (this.casual) {
