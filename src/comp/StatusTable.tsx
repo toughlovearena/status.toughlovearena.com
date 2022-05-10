@@ -28,8 +28,8 @@ const polls = [{
   label: 'lobbyb.tla',
   url: 'https://lobbyb.toughlovearena.com/health',
 }, {
-  label: 'stun.tla',
-  url: 'https://stun.toughlovearena.com/health',
+  label: 'ice.tla',
+  url: 'https://ice.toughlovearena.com/health',
 }, {
   label: 'serverless accounts API	',
   url: 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/',
