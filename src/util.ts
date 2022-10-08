@@ -1,3 +1,4 @@
+import { AsyncQueue } from "./asyncQueue";
 
 export function isLongPoll() {
   return !!(new URLSearchParams(window.location.search).get('long'));
@@ -7,8 +8,10 @@ export function isSimple() {
   return !!(new URLSearchParams(window.location.search).get('simple'));
 }
 
-export function fetchNoCache(url: string) {
-  return fetch(url + '?cache=' + new Date().getTime());
+const fetchQueue = new AsyncQueue();
+export function fetchNoCache(url: string): Promise<any> {
+  const cb = () => fetch(url + '?cache=' + new Date().getTime());
+  return fetchQueue.enqueue(cb).promise;
 }
 
 export function range(length: number): number[] {
