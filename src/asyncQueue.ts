@@ -1,19 +1,18 @@
 import { resolvable, Resolvable } from "./resolvable";
 
-export class AsyncQueue<T> {
+export class AsyncQueue {
   private readonly threads;
   private count = 0;
   private queue: {
     id: number;
-    cb: () => Promise<T>;
-    resolvable: Resolvable<T>;
+    resolvable: Resolvable<any>;
   }[] = [];
 
   constructor(threads?: number) {
     this.threads = Math.max(1, threads ?? 3);
   }
 
-  enqueue(cb: () => Promise<T>): Resolvable<T> {
+  enqueue<T>(cb: () => Promise<T>): Resolvable<T> {
     const id = this.count++;
     const item = resolvable<T>();
     const process = async () => cb()
@@ -30,7 +29,6 @@ export class AsyncQueue<T> {
 
     this.queue.push({
       id,
-      cb,
       resolvable: item,
     });
     return item;
@@ -41,3 +39,5 @@ export class AsyncQueue<T> {
   }
 
 }
+
+export const QUEUE = new AsyncQueue();

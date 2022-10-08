@@ -8,10 +8,11 @@ export function isSimple() {
   return !!(new URLSearchParams(window.location.search).get('simple'));
 }
 
-const fetchQueue = new AsyncQueue();
-export function fetchNoCache(url: string): Promise<any> {
-  const cb = () => fetch(url + '?cache=' + new Date().getTime());
-  return fetchQueue.enqueue(cb).promise;
+export function fetchNoCache(url: string): Promise<Response> {
+  return fetch(url + '?cache=' + new Date().getTime());
+}
+export function queueFetch(queue: AsyncQueue, url: string): Promise<Response> {
+  return queue.enqueue(() => fetchNoCache(url)).promise;
 }
 
 export function range(length: number): number[] {

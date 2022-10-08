@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { QUEUE } from '../asyncQueue';
 import { CRON } from '../cron';
-import { fetchNoCache } from '../util';
+import { queueFetch } from '../util';
 
 export function Version() {
   const [version, setVersion] = useState(undefined as string | undefined);
 
   const fetchVersion = useCallback(async () => {
-    const response = await fetchNoCache('https://toughlovearena.com/version.json');
+    const response = await queueFetch(QUEUE, 'https://toughlovearena.com/version.json');
     const data = await response.json() as { v: string, u: string, };
     setVersion(data.v);
   }, [setVersion]);

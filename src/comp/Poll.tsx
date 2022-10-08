@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { QUEUE } from '../asyncQueue';
 import { CRON } from '../cron';
 import { fetchNoCache } from '../util';
 
@@ -22,21 +23,23 @@ export function Poll(props: {
   const [isUp, setIsUp] = useState(undefined as boolean | undefined);
   const [pingMs, setPingMs] = useState(undefined as number | undefined);
 
-  const checkIsUp = useCallback(async () => {
-    const before = performance.now();
-    try {
-      const response = await fetchNoCache(url);
-      if (!response.ok) {
-        throw new Error('fetch failed: ' + url);
+  const checkIsUp = useCallback(() => {
+    QUEUE.enqueue(async () => {
+      const before = performance.now();
+      try {
+        const response = await fetchNoCache(url);
+        if (!response.ok) {
+          throw new Error('fetch failed: ' + url);
+        }
+        setIsUp(true);
+        report(true);
+      } catch (err) {
+        setIsUp(false);
+        report(false);
       }
-      setIsUp(true);
-      report(true);
-    } catch (err) {
-      setIsUp(false);
-      report(false);
-    }
-    const after = performance.now();
-    setPingMs(Math.round(after - before));
+      const after = performance.now();
+      setPingMs(Math.round(after - before));
+    });
   }, [url, report, setIsUp, setPingMs]);
   useEffect(() => CRON.register(`poll-${label}`, () => checkIsUp()), [label, checkIsUp]);
 

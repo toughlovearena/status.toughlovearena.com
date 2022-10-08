@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { CRON } from '../cron';
 import { DataSection, SectionTitle, DataTable } from './shared';
-import { fetchNoCache } from '../util';
+import { QUEUE } from '../asyncQueue';
+import { queueFetch } from '../util';
 
 export function ActivePlayers() {
   const [counts, setCounts] = useState(undefined as Record<string, number> | undefined);
 
   const fetchCounts = useCallback(async () => {
-    const response = await fetchNoCache('https://presence.toughlovearena.com');
+    const response = await queueFetch(QUEUE, 'https://presence.toughlovearena.com');
     const counts = await response.json() as Record<string, number>;
     setCounts(counts);
   }, [setCounts]);
