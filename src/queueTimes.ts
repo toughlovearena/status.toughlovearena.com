@@ -1,4 +1,3 @@
-import { QUEUE } from './asyncQueue';
 import { ChartRef } from './chart';
 import { CRON } from './cron';
 import { chunk, queueFetch, range } from './util';
@@ -69,7 +68,7 @@ class QueueTimesSingleton {
   private async step() {
     const queues: { queueTimes: QueueTimes, ref: QueueRef }[] = [];
     try {
-      const response = await queueFetch(QUEUE, 'https://matchmaker.toughlovearena.com/details');
+      const response = await queueFetch('https://matchmaker.toughlovearena.com/details');
       const servers = await response.json() as ServerData[];
       const prod = servers.filter(s => s.label === 'prod')[0];
       if (this.casual) {

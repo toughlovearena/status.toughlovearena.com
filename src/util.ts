@@ -11,8 +11,9 @@ export function isSimple() {
 export function fetchNoCache(url: string): Promise<Response> {
   return fetch(url + '?cache=' + new Date().getTime());
 }
-export function queueFetch(queue: AsyncQueue, url: string): Promise<Response> {
-  return queue.enqueue(() => fetchNoCache(url)).promise;
+export const QUEUE = new AsyncQueue();
+export function queueFetch(url: string): Promise<Response> {
+  return QUEUE.enqueue(() => fetchNoCache(url)).promise;
 }
 
 export function range(length: number): number[] {

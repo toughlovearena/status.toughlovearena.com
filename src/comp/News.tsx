@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { QUEUE } from '../asyncQueue';
 import { CRON } from '../cron';
 import { queueFetch } from '../util';
 
@@ -7,7 +6,7 @@ export function News() {
   const [news, setNews] = useState(undefined as string | undefined);
 
   const fetchNews = useCallback(async () => {
-    const response = await queueFetch(QUEUE, 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/news');
+    const response = await queueFetch('https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/news');
     const data = await response.json() as { message: string, };
     setNews(data.message);
   }, [setNews]);

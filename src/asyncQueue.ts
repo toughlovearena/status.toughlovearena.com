@@ -39,5 +39,3 @@ export class AsyncQueue {
   }
 
 }
-
-export const QUEUE = new AsyncQueue();
