@@ -7,6 +7,9 @@ const polls = [{
   label: 'toughlovearena.com',
   url: 'https://toughlovearena.com/version.json',
 }, {
+  label: 'api.tla',
+  url: 'https://api.toughlovearena.com/health',
+}, {
   label: 'cache.tla',
   url: 'https://cache.toughlovearena.com/health',
 }, {
@@ -30,9 +33,6 @@ const polls = [{
 }, {
   label: 'ice.tla',
   url: 'https://ice.toughlovearena.com/health',
-}, {
-  label: 'serverless accounts API	',
-  url: 'https://us-central1-fighter-api.cloudfunctions.net/webApi/api/v1/',
 }];
 
 const StatusLabel = styled.a<{ isUp: boolean }>`
