@@ -91,6 +91,12 @@ export function ActivePlayers() {
             <td>Replay</td>
             <td>{renderCount('replay')}</td>
           </tr>
+          <tr>
+            <td>Arcade (Easy)</td>
+            <td>{renderCount('arcade_easy')}</td>
+            <td>Arcade (Hard)</td>
+            <td>{renderCount('arcade_hard')}</td>
+          </tr>
         </tbody>
       </DataTable>
     </DataSection>
