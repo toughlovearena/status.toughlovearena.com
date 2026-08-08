@@ -17,13 +17,12 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: yarn install
-        run: yarn install
+      - run: npm install
 
-      - name: Build site
+      - name: Build
         env:
           CI: false
-        run: yarn build
+        run: npm start build
 
       # - name: Run tests
       #   run: yarn test
