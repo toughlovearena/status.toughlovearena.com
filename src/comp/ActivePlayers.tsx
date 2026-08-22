@@ -3,6 +3,54 @@ import { CRON } from "../cron";
 import { queueFetch } from "../util";
 import { DataSection, DataTable, SectionTitle } from "./shared";
 
+type Pair<T> = [T, T];
+const modes: Pair<Pair<string>>[] = [
+  [
+    ["welcome", "Welcome"],
+    ["menu", "Menu"],
+  ],
+  [
+    ["how_to_play", "How to Play"],
+    ["training", "Training"],
+  ],
+  [
+    ["vs_local", "Local Versus"],
+    ["vs_cpu", "Versus CPU"],
+  ],
+  [
+    ["arcade_easy", "Story (Easy)"],
+    ["arcade_hard", "Story (Hard)"],
+  ],
+  [
+    ["arcade_story", "Story (Auto)"],
+    ["replay", "Replay"],
+  ],
+  [
+    ["online_ranked", "Ranked Match"],
+    ["online_casual", "Casual Match"],
+  ],
+  [
+    ["online_private", "Private Match"],
+    ["online_lobby", "Private Lobby"],
+  ],
+  [
+    ["online_account", "Account Login"],
+    ["online_stats", "Account Stats"],
+  ],
+  [
+    ["frame_data", "Frame Data"],
+    ["debug_ref", "Debug Ref"],
+  ],
+  [
+    ["modding", "Modding"],
+    ["about", "About"],
+  ],
+  [
+    ["online_leaderboard", "Leaderboard"],
+    ["hall_of_fame", "Hall of Fame"],
+  ],
+];
+
 export function ActivePlayers() {
   const [counts, setCounts] = useState(
     undefined as Record<string, number> | undefined,
@@ -36,72 +84,16 @@ export function ActivePlayers() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Welcome</td>
-            <td>{renderCount("welcome")}</td>
-            <td>Menu</td>
-            <td>{renderCount("menu")}</td>
-          </tr>
-          <tr>
-            <td>How to Play</td>
-            <td>{renderCount("how_to_play")}</td>
-            <td>Training</td>
-            <td>{renderCount("training")}</td>
-          </tr>
-          <tr>
-            <td>Modding</td>
-            <td>{renderCount("modding")}</td>
-            <td>Story (Auto)</td>
-            <td>{renderCount("arcade_story")}</td>
-          </tr>
-          <tr>
-            <td>Story (Easy)</td>
-            <td>{renderCount("arcade_easy")}</td>
-            <td>Story (Hard)</td>
-            <td>{renderCount("arcade_hard")}</td>
-          </tr>
-          <tr>
-            <td>Local Versus</td>
-            <td>{renderCount("vs_local")}</td>
-            <td>Versus CPU</td>
-            <td>{renderCount("vs_cpu")}</td>
-          </tr>
-          <tr>
-            <td>Ranked Match</td>
-            <td>{renderCount("online_ranked")}</td>
-            <td>Casual Match</td>
-            <td>{renderCount("online_casual")}</td>
-          </tr>
-          <tr>
-            <td>Private Match</td>
-            <td>{renderCount("online_private")}</td>
-            <td>Private Lobby</td>
-            <td>{renderCount("online_lobby")}</td>
-          </tr>
-          <tr>
-            <td>Replay</td>
-            <td>{renderCount("replay")}</td>
-            <td>Account Login</td>
-            <td>{renderCount("online_account")}</td>
-          </tr>
-          <tr>
-            <td>Frame Data</td>
-            <td>{renderCount("frame_data")}</td>
-            <td>Debug Ref</td>
-            <td>{renderCount("debug_ref")}</td>
-          </tr>
-          <tr>
-            <td>Account Stats</td>
-            <td>{renderCount("online_stats")}</td>
-            <td>Leaderboard</td>
-            <td>{renderCount("online_leaderboard")}</td>
-          </tr>
-          <tr>
-            <td>About</td>
-            <td>{renderCount("about")}</td>
-            <td>Hall of Fame</td>
-            <td>{renderCount("hall_of_fame")}</td>
-          </tr>
+          {modes.map((row, pi) => (
+            <tr key={`mode-${pi}`}>
+              {row.map(([key, label]) => (
+                <>
+                  <td>{label}</td>
+                  <td>{renderCount(key)}</td>
+                </>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </DataTable>
     </DataSection>
