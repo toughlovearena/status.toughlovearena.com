@@ -15,9 +15,9 @@ const polls = [{
 }, {
   label: 'handshake.tla',
   url: 'https://handshake.toughlovearena.com/health',
-}, {
-  label: 'leaderboard.tla',
-  url: 'https://leaderboard.toughlovearena.com/health',
+// }, {
+//   label: 'leaderboard.tla',
+//   url: 'https://leaderboard.toughlovearena.com/health',
 }, {
   label: 'matchmaker.tla',
   url: 'https://matchmaker.toughlovearena.com',
